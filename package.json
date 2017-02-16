@@ -1,0 +1,29 @@
+{
+  "name": "node-masterpass-api",
+  "version": "1.0.0",
+  "description": "Simple Node.js library to interact with the masterpass apis",
+  "main": "node-masterpass-api.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/perusworld/node-masterpass-api.git"
+  },
+  "keywords": [
+    "nodejs",
+    "masterpass",
+    "api"
+  ],
+  "author": "Saravana Perumal Shanmugam <saravanaperumal@msn.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/perusworld/node-masterpass-api/issues"
+  },
+  "homepage": "https://github.com/perusworld/node-masterpass-api",
+  "dependencies": {
+    "async": "^2.1.4",
+    "merge": "^1.2.0",
+    "request": "^2.79.0"
+  }
+}
