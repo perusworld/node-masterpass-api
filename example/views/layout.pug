@@ -14,6 +14,21 @@ html(lang='en')
     script(src='/scripts/common.js')
     block scripts
   body
-    block content
+    .container
+      nav.navbar.navbar-inverse
+        .container
+          .navbar-header
+            button.navbar-toggle.collapsed(data-toggle='collapse', data-target='#navbar', type='button', aria-expanded='false', aria-controls='navbar')
+              span.sr-only Toggle navigation
+              span.icon-bar
+              span.icon-bar
+              span.icon-bar
+            |  
+            a.navbar-brand(href='/') masterpass test server
+          #navbar.navbar-collapse.collapse
+            ul.nav.navbar-nav
+              li.active
+                a(href='/') Home
+      block content
     block footer
     block footerscripts
