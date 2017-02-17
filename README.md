@@ -34,6 +34,8 @@ masterpass.requestToken((err, resp) => {
 
 ## Example App ##
 
+![Example App](https://raw.githubusercontent.com/perusworld/node-masterpass-api/master/example/public/images/screenshot.png "Example App")
+
 There is a sample app in the example folder that shows the available operations, set the following env variables before running the app.
 
 ```powershell
