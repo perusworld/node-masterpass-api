@@ -31,3 +31,20 @@ masterpass.requestToken((err, resp) => {
 });
 
 ```
+
+## Example App ##
+
+There is a sample app in the example folder that shows the available operations, set the following env variables before running the app.
+
+```powershell
+    $env:MP_PRIVATE_KEY = [IO.File]::ReadAllText("---your private key---")
+    $env:MP_CONSUMER_KEY = "---your consumer key---"
+    $env:MP_CALLBACK_URL = "http://localhost:3000/requestTokenCallback"
+    $env:MP_CHECKOUT_ID = "---your checkout id---"
+```
+
+Run the app
+
+```powershell
+    node server.js
+```
