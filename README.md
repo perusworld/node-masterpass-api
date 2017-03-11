@@ -1,5 +1,8 @@
 # Simple Node.js library to interact with the masterpass apis #
 
+[![bitHound Overall Score](https://www.bithound.io/github/perusworld/node-masterpass-api/badges/score.svg)](https://www.bithound.io/github/perusworld/node-masterpass-api)
+[![bitHound Dependencies](https://www.bithound.io/github/perusworld/node-masterpass-api/badges/dependencies.svg)](https://www.bithound.io/github/perusworld/node-masterpass-api/master/dependencies/npm)
+[![bitHound Code](https://www.bithound.io/github/perusworld/node-masterpass-api/badges/code.svg)](https://www.bithound.io/github/perusworld/node-masterpass-api)
 
 Based on [Test Merchant Server](https://github.com/Mastercard/masterpass-android-sample-app/tree/master/Test-Merchant-Server)
 
