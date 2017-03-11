@@ -28,8 +28,8 @@ app.get('/', function (req, res) {
         title: 'Hello',
         masterpass: masterpass,
         params: {}
-    })
-})
+    });
+});
 
 app.get('/requestToken', function (req, res) {
     masterpass.requestToken((err, resp) => {
@@ -39,15 +39,15 @@ app.get('/requestToken', function (req, res) {
             res.json(resp);
         }
     });
-})
+});
 
 app.get('/requestTokenCallback', function (req, res) {
     res.render('index', {
         title: 'Continue Checkout',
         masterpass: masterpass,
         params: req.query
-    })
-})
+    });
+});
 
 app.listen(app.get('port'), function () {
     console.log('Node app is running on port', app.get('port'));

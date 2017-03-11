@@ -37,7 +37,7 @@ function Masterpass(opts) {
     this.conf.requestUrl = this.conf.urlPrefix + this.conf.urls.accessToken;
     this.conf.keySignUrl = this.conf.urlPrefix + this.conf.urls.keySign;
 
-};
+}
 
 Masterpass.prototype.getTimestamp = function () {
     return "" + Math.floor((new Date()).getTime() / 1000);
@@ -45,7 +45,7 @@ Masterpass.prototype.getTimestamp = function () {
 
 Masterpass.prototype.getNonce = function () {
     var hrtime = process.hrtime();
-    return "" + (hrtime[0] * 1e9 + hrtime[1])
+    return "" + (hrtime[0] * 1e9 + hrtime[1]);
 };
 
 Masterpass.prototype.toXML = function (header, obj, callback) {
@@ -72,8 +72,9 @@ Masterpass.prototype.toJSON = function (xml, callback) {
 };
 
 Masterpass.prototype.encodeData = function (toEncode) {
-    if (toEncode == null || toEncode == "") return ""
-    else {
+    if (toEncode === null || toEncode === "") {
+        return "";
+    } else {
         var result = encodeURIComponent(toEncode);
         return result.replace(/\!/g, "%21")
             .replace(/\'/g, "%27")
@@ -95,7 +96,7 @@ Masterpass.prototype.buildHeaderString = function (ctx, callback) {
 };
 
 Masterpass.prototype.signHeader = function (ctx, callback) {
-    ctx.params.oauth_signature = crypto.createSign("RSA-SHA1").update(ctx.header).sign(this.conf.privateKey, 'base64')
+    ctx.params.oauth_signature = crypto.createSign("RSA-SHA1").update(ctx.header).sign(this.conf.privateKey, 'base64');
     callback(null, ctx);
 };
 
@@ -106,7 +107,7 @@ Masterpass.prototype.buildRequestHeader = function (ctx, callback) {
         oauth_timestamp: this.getTimestamp(),
         oauth_signature_method: this.conf.signature,
         oauth_version: this.conf.version
-    }
+    };
     if (ctx.customParams) {
         params = merge(params, ctx.customParams);
     }
@@ -188,7 +189,7 @@ Masterpass.prototype.initSession = function (callback) {
                     privateKey: pki.privateKeyToPem(keypair.privateKey),
                     publicKey: pki.publicKeyToPem(keypair.publicKey)
                 }
-            })
+            });
         }
     });
 };
