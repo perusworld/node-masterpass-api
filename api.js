@@ -116,7 +116,7 @@ Masterpass.prototype.buildRequestHeader = function (ctx, callback) {
         "oauth_nonce=" + this.encodeData(params.oauth_nonce), "oauth_signature_method=" + this.encodeData(params.oauth_signature_method),
         "oauth_timestamp=" + this.encodeData(params.oauth_timestamp), "oauth_version=" + this.encodeData(params.oauth_version)
     ];
-    if (ctx.customParams && ctx.customParams["oauth_callback"]) {
+    if (ctx.customParams && ctx.customParams.oauth_callback) {
         encodedParams.unshift("oauth_callback=" + this.encodeData(ctx.customParams.oauth_callback));
     }
     if (ctx.body) {
