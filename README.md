@@ -9,20 +9,47 @@ npm install github:perusworld/node-masterpass-api --save
 ```
 ## Usage ##
 
-### Request Token Service - [Request Token Service](https://developer.mastercard.com/documentation/masterpass-merchant-integration#api_request_token_service) ##
+### [Request Token Service](https://developer.mastercard.com/documentation/masterpass-merchant-integration#api_request_token_service) ##
 ```javascript
-const fs = require('fs');
-
 var masterpassapi = require('node-masterpass-api').masterpass();
-var private = fs.readFileSync("privateKey", "utf8");
 
 var masterpass = new masterpassapi.Masterpass({
-    privateKey: private,
-    consumerKey: '------your consumer key ---',
-    callBackUrl: 'https://www.blah.com/blah'
+    privateKey: process.env.MP_PRIVATE_KEY,
+    consumerKey: process.env.MP_CONSUMER_KEY,
+    callBackUrl: process.env.MP_CALLBACK_URL
 });
 
 masterpass.requestToken((err, resp) => {
+    if (err) {
+        console.log(err);
+    } else {
+        console.log(resp);
+    }
+});
+
+```
+
+### [Request Session Key Signing](https://developer.mastercard.com/documentation/masterpass-merchant-integration#api_session_key_signing) ##
+```javascript
+var masterpassapi = require('node-masterpass-api').masterpass();
+var async = require('async');
+
+var masterpass = new masterpassapi.Masterpass({
+    privateKey: process.env.MP_PRIVATE_KEY,
+    consumerKey: process.env.MP_CONSUMER_KEY,
+    callBackUrl: process.env.MP_CALLBACK_URL,
+    appVersion: process.env.MP_APP_VERSION,
+    appId: process.env.MP_APP_ID,
+});
+
+async.waterfall([
+    function (callback) {
+        masterpass.initSession(callback);
+    },
+    function (ctx, callback) {
+        masterpass.sessionKeySign(ctx, callback);
+    }
+], (err, resp) => {
     if (err) {
         console.log(err);
     } else {
@@ -42,7 +69,6 @@ There is a sample app in the example folder that shows the available operations,
     $env:MP_PRIVATE_KEY = [IO.File]::ReadAllText("---your private key---")
     $env:MP_CONSUMER_KEY = "---your consumer key---"
     $env:MP_CALLBACK_URL = "http://localhost:3000/requestTokenCallback"
-    $env:MP_CHECKOUT_ID = "---your checkout id---"
 ```
 
 Run the app
