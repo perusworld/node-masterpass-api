@@ -63,7 +63,10 @@ async.waterfall([
 ```
 
 ## Example App ##
+### node-masterpass-api - Masterpass Standard Checkout Lightbox Demo Video ###
+[![node-masterpass-api - Masterpass Standard Checkout Lightbox Demo Video](https://img.youtube.com/vi/Ayyq_hYlTEg/3.jpg)](https://youtu.be/Ayyq_hYlTEg)
 
+### Example App ###
 ![Example App](https://raw.githubusercontent.com/perusworld/node-masterpass-api/master/example/public/images/screenshot.png "Example App")
 
 There is a sample app in the example folder that shows the available operations, set the following env variables before running the app.
