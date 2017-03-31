@@ -4,7 +4,10 @@ var checkoutConfig = {
 };
 
 function continueCheckout(resp) {
-  console.log(resp);
+      $("#mpstatus").val(resp.mpstatus);
+      $("#checkoutResourceUrl").val(resp.checkout_resource_url);
+      $("#oauthVerifier").val(resp.oauth_verifier);
+      $("#oauthToken").val(resp.oauth_token);
 }
 
 function beginCheckout(token, callBackUrl, merchantCheckoutId) {
@@ -16,12 +19,13 @@ function beginCheckout(token, callBackUrl, merchantCheckoutId) {
     "successCallback": continueCheckout,
     "merchantCheckoutId": merchantCheckoutId,
     "allowedCardTypes": ["master,amex,discover,visa"],
-    "suppressShippingAddressEnable": "true",
+    "suppressShippingAddressEnable": "false",
     "version": "v6"
   });
 }
 
 $(function () {
+
   $("#btnReqToken").click(function () {
     $.get("/requestToken", function (data) {
       $("#requestToken").val(data.oauth_token);
@@ -29,9 +33,33 @@ $(function () {
     return false;
   });
 
+  $("form#setupShoppingCart").submit(function (event) {
+    var req = $(this).serializeArray();
+    $.post("/setupShoppingCart", req, function (data) {
+      $("#cartRequestToken").val(data.shoppingcartresponse.oauthtoken);
+    });
+    event.preventDefault();
+  });
+
+  $("form#initMerchant").submit(function (event) {
+    var req = $(this).serializeArray();
+    $.post("/merchantInit", req, function (data) {
+      $("#initRequestToken").val(data.merchantinitializationresponse.oauthtoken);
+    });
+    event.preventDefault();
+  });
+
   $("#btnStartCheckout").click(function () {
-    beginCheckout($("#requestToken").val(), checkoutConfig.callBackUrl, checkoutConfig.merchantCheckoutId);
+    beginCheckout($("#initRequestToken").val(), checkoutConfig.callBackUrl, checkoutConfig.merchantCheckoutId);
     return false;
+  });
+
+  $("form#accessTokenService").submit(function (event) {
+    var req = $(this).serializeArray();
+    $.post("/accessToken", req, function (data) {
+      console.log(data);
+    });
+    event.preventDefault();
   });
 
 });

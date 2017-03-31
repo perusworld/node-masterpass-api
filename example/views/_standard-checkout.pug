@@ -1,0 +1,113 @@
+.panel.panel-success
+    .panel-body
+        p Follow the steps (Most of this, you will be keeping it at the server side. This is just a demo of the call history)
+    table.table
+        tr.warning
+            td
+                label Step 1:
+        tr
+            td
+                form.form-inline
+                    button#btnReqToken.btn.btn-primary
+                        i.fa.fa-key.fa-lg
+                        |  Request Token
+        tr.warning
+            td
+                label Step 2:
+        tr
+            td
+                form#setupShoppingCart
+                    .form-group
+                        label(for='requestToken') Request Token
+                        |  
+                        input#requestToken.form-control(name='requestToken', type='text', placeholder='Request Token', size="45")
+                    |  
+                    .form-group
+                        label(for='itemPrice') Item Price
+                        |  
+                        input#itemPrice.form-control(name='itemPrice', type='text', placeholder='Item Price', value="299.99")
+                    |  
+                    .form-group
+                        label(for='itemDesc') Item Description
+                        |  
+                        input#itemDesc.form-control(name='itemDesc', type='text', placeholder='Item Description', value="jPhone 9s")
+                    |  
+                    .form-group
+                        label(for='itemQty') Item Quantity
+                        |  
+                        input#itemQty.form-control(name='itemQty', type='text', placeholder='Item Quantity', value="1")
+                    |  
+                    button.btn.btn-primary(type='submit')
+                        i.fa.fa-shopping-cart.fa-lg
+                        |  Setup Shopping Cart                                
+        tr.warning
+            td
+                label Step 3:
+        tr
+            td
+                form#initMerchant.form-inline
+                    .form-group
+                        label(for='requestToken') Request Token
+                        |  
+                        input#cartRequestToken.form-control(name='requestToken', type='text', placeholder='Request Token', size="45")
+                    |  
+                    button#btnInitMerch.btn.btn-primary
+                        i.fa.fa-shopping-cart.fa-lg
+                        |  Initialize Merchant
+        tr.warning
+            td
+                label Step 4:
+        tr
+            td
+                form.form-inline
+                    .form-group
+                        label(for='requestToken') Request Token
+                        |  
+                        input#initRequestToken.form-control(type='text', placeholder='Request Token', size="45")
+                    |  
+                    button#btnStartCheckout.btn.btn-primary
+                        i.fa.fa-shopping-cart.fa-lg
+                        |  Start Checkout (Light Box)
+        tr.warning
+            td
+                label Step 5:
+        tr
+            td
+                form#accessTokenService
+                    .form-group
+                        label(for='mpstatus') Lightbox Statux
+                        |  
+                        input#mpstatus.form-control(name='mpstatus', type='text', placeholder='Lightbox Status')
+                    |  
+                    .form-group
+                        label(for='chkResUrl') Checkout Resource Url
+                        |  
+                        input#checkoutResourceUrl.form-control(name='checkoutResourceUrl', type='text', placeholder='Checkout Resource Url')
+                    |  
+                    .form-group
+                        label(for='itemDesc') oAuth Verifier
+                        |  
+                        input#oauthVerifier.form-control(name='oauthVerifier', type='text', placeholder='oAuth Verifier')
+                    |  
+                    .form-group
+                        label(for='itemQty') oAuth Token
+                        |  
+                        input#oauthToken.form-control(name='oauthToken', type='text', placeholder='oAuth Token')
+                    |  
+                    button.btn.btn-primary(type='submit')
+                        i.fa.fa-shopping-cart.fa-lg
+                        |  Call Access Token Service
+        tr.warning
+            td
+                label Step 6:
+        tr
+            td
+                form#getCheckout
+                    .form-group
+                        label(for='accessToken') Access Token
+                        |  
+                        input#accessToken.form-control(name='accessToken', type='text', placeholder='Access Token')
+                    |  
+                    button.btn.btn-primary(type='submit')
+                        i.fa.fa-shopping-cart.fa-lg
+                        |  Get Checkout Info

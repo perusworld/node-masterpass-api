@@ -1,7 +1,10 @@
 extends layout
 
 block scripts
-    script(src='//sandbox.static.masterpass.com/dyn/js/switch/integration/MasterPass.client.js')
+    if masterpass.conf.env == 'stage'
+        script(src='//sandbox.static.masterpass.com/dyn/js/switch/integration/MasterPass.client.js')
+    else
+        script(src='//static.masterpass.com/dyn/js/switch/integration/MasterPass.client.js')
     script(src='/scripts/index.js')
     script.
         checkoutConfig.callBackUrl = "#{masterpass.conf.callBackUrl}";
@@ -9,60 +12,17 @@ block scripts
 
 block content
     .container-fluid
-        .panel.panel-success
-            .panel-heading masterpass test server
-            .panel-body
-                p Choose from the following operations.
-            table.table
-                tr.warning
-                    td
-                        label Step 1:
-                tr
-                    td
-                        form.form-inline
-                            button#btnReqToken.btn.btn-primary
-                                i.fa.fa-key.fa-lg
-                                |  Request Token
-                tr.warning
-                    td
-                        label Step 2:
-                tr
-                    td
-                        form.form-inline
-                            .form-group
-                                label(for='requestToken') Request Token
-                                |  
-                                input#requestToken.form-control(type='text', placeholder='Request Token', size="45")
-                            |  
-                            button#btnStartCheckout.btn.btn-primary
-                                i.fa.fa-shopping-cart.fa-lg
-                                |  Start Checkout (Light Box)
-                tr.warning
-                    td
-                        label Step 3:
-                tr
-                    td
-                        form
-                            .form-group
-                                label(for='requestTokenStatus') Status
-                                |  
-                                input#requestTokenStatus.form-control(type='text', readonly='', placeholder='Status', value=params.mpstatus)
-                            |  
-                            .form-group
-                                label(for='checkoutId') Checkout Id
-                                |  
-                                input#checkoutId.form-control(type='text', readonly='', placeholder='Checkout Id', value=params.checkoutId)
-                            |  
-                            .form-group
-                                label(for='oauthToken') OAuth Token
-                                |  
-                                input#oauthToken.form-control(type='text', readonly='', placeholder='OAuth Token', size="45", value=params.oauth_token)
-                            |  
-                            .form-group
-                                label(for='oauthVerifier') OAuth Verifier
-                                |  
-                                input#oauthVerifier.form-control(type='text', readonly='', placeholder='OAuth Verifier', size="45", value=params.oauth_verifier)
-                            |  
-                            button.btn.btn-primary
-                                i.fa.fa-shopping-cart.fa-lg
-                                |  Access Token
+      ul.nav.nav-tabs(role='tablist')
+        li.active(role='presentation')
+          a(href='#stdchk', aria-controls='stdchk', role='tab', data-toggle='tab') Standard Checkout
+        li(role='presentation')
+          a(href='#expchk', aria-controls='expchk', role='tab', data-toggle='tab') Express Checkout
+        li(role='presentation')
+          a(href='#contchk', aria-controls='contchk', role='tab', data-toggle='tab') Container App to Mobile Checkout
+      .tab-content
+        #stdchk.tab-pane.active(role='tabpanel')
+            include _standard-checkout.pug
+        #expchk.tab-pane(role='tabpanel')
+            include _express-checkout.pug
+        #contchk.tab-pane(role='tabpanel')
+            include _container-app-checkout.pug

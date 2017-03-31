@@ -23,19 +23,25 @@ function Masterpass(opts) {
         keySize: 2048
     }, opts, {
             urls: {
-                production: '',
+                production: 'https://api.mastercard.com',
                 stage: 'https://sandbox.api.mastercard.com',
-                accessToken: '/oauth/consumer/v1/request_token',
-                keySign: '/masterpass/v6/sessionkeysigning'
+                requestToken: '/oauth/consumer/v1/request_token',
+                keySign: '/masterpass/v6/sessionkeysigning',
+                shoppingCart: '/masterpass/v6/shopping-cart',
+                merchantInit: '/masterpass/v6/merchant-initialization',
+                accessToken: '/oauth/consumer/v1/access_token'
             }
         });
     if (this.conf.env === 'production') {
-        //
+        this.conf.urlPrefix = this.conf.urls.production;
     } else {
         this.conf.urlPrefix = this.conf.urls.stage;
     }
-    this.conf.requestUrl = this.conf.urlPrefix + this.conf.urls.accessToken;
+    this.conf.requestUrl = this.conf.urlPrefix + this.conf.urls.requestToken;
     this.conf.keySignUrl = this.conf.urlPrefix + this.conf.urls.keySign;
+    this.conf.shoppingCartUrl = this.conf.urlPrefix + this.conf.urls.shoppingCart;
+    this.conf.merchantInitUrl = this.conf.urlPrefix + this.conf.urls.merchantInit;
+    this.conf.accessTokenUrl = this.conf.urlPrefix + this.conf.urls.accessToken;
 
 }
 
@@ -116,9 +122,14 @@ Masterpass.prototype.buildRequestHeader = function (ctx, callback) {
         "oauth_nonce=" + this.encodeData(params.oauth_nonce), "oauth_signature_method=" + this.encodeData(params.oauth_signature_method),
         "oauth_timestamp=" + this.encodeData(params.oauth_timestamp), "oauth_version=" + this.encodeData(params.oauth_version)
     ];
-    if (ctx.customParams && ctx.customParams.oauth_callback) {
-        encodedParams.unshift("oauth_callback=" + this.encodeData(ctx.customParams.oauth_callback));
+    if (ctx.customParams) {
+        for (var key in ctx.customParams) {
+            if (ctx.customParams.hasOwnProperty(key) && key != 'realm') {
+                encodedParams.push(key + '=' + this.encodeData(ctx.customParams[key]))
+            }
+        }
     }
+    encodedParams = encodedParams.sort();
     if (ctx.body) {
         var hash = crypto.createHash('sha1');
         hash.update(ctx.body);
@@ -225,5 +236,82 @@ Masterpass.prototype.sessionKeySign = function (req, callback) {
         }
     ], callback);
 };
+
+Masterpass.prototype.buildShoppingCartRequest = function (req, callback) {
+    var ret = {
+        OAuthToken: [req.token],
+        ShoppingCart:
+        [{
+            CurrencyCode: [req.currencyCode],
+            Subtotal: [req.subTotal],
+            ShoppingCartItem: []
+        }]
+    };
+    req.items.forEach((entry) => {
+        ret.ShoppingCart[0].ShoppingCartItem.push({
+            Description: [entry.desc],
+            Quantity: [entry.qty],
+            Value: [entry.value]
+        })
+    });
+    async.nextTick(() => {
+        callback(null, ret);
+    });
+};
+
+Masterpass.prototype.createShoppingCart = function (req, callback) {
+    var ptr = this;
+    async.waterfall([
+        function (callback) {
+            ptr.buildShoppingCartRequest(req, callback);
+        },
+        function (newReq, callback) {
+            ptr.toXML('ShoppingCartRequest', newReq, callback);
+        },
+        function (xmlStr, callback) {
+            ptr.buildAndSendRequest({
+                url: ptr.conf.shoppingCartUrl,
+                body: xmlStr,
+                sendOpts: {
+                    xmlToJson: true
+                }
+            }, callback);
+        }
+    ], callback);
+};
+
+Masterpass.prototype.merchantInit = function (req, callback) {
+    var ptr = this;
+    async.waterfall([
+        function (callback) {
+            ptr.toXML('MerchantInitializationRequest', {
+                OAuthToken: [req.token],
+                OriginUrl: [ptr.conf.originUrl]
+            }, callback);
+        },
+        function (xmlStr, callback) {
+            ptr.buildAndSendRequest({
+                url: ptr.conf.merchantInitUrl,
+                body: xmlStr,
+                sendOpts: {
+                    xmlToJson: true
+                }
+            }, callback);
+        }
+    ], callback);
+};
+
+Masterpass.prototype.accessToken = function (req, callback) {
+    this.buildAndSendRequest({
+        url: this.conf.accessTokenUrl,
+        customParams: {
+            oauth_callback: this.conf.callBackUrl,
+            oauth_verifier: req.verifier,
+            oauth_token: req.token,
+            realm: this.conf.realm
+        }
+    }, callback);
+};
+
 
 module.exports.Masterpass = Masterpass;
