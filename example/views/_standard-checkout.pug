@@ -75,7 +75,7 @@
             td
                 form#accessTokenService
                     .form-group
-                        label(for='mpstatus') Lightbox Statux
+                        label(for='mpstatus') Lightbox Status
                         |  
                         input#mpstatus.form-control(name='mpstatus', type='text', placeholder='Lightbox Status')
                     |  
@@ -108,6 +108,63 @@
                         |  
                         input#accessToken.form-control(name='accessToken', type='text', placeholder='Access Token')
                     |  
+                    .form-group
+                        label(for='chkResUrl') Checkout Resource Url
+                        |  
+                        input#checkoutId.form-control(name='checkoutId', type='text', placeholder='Checkout Resource Url')
+                    |  
                     button.btn.btn-primary(type='submit')
                         i.fa.fa-shopping-cart.fa-lg
                         |  Get Checkout Info
+        tr.warning
+            td
+                label Step 7:
+        tr
+            td
+                form
+                    .form-group
+                        label(for='cartData') Cart Response
+                        |  
+                        textarea#cartData.form-control(placeholder='Cart Response', rows=10)
+        tr.warning
+            td
+                label Step 8:
+        tr
+            td
+                label Process payment through a payment gateway, use the approval code in the next step
+        tr.warning
+            td
+                label Step 9:
+        tr
+            td
+                form#transactionPostback
+                    .form-group
+                        label(for='transactionId') Transaction Id
+                        |  
+                        input#transactionId.form-control(name='transactionId', type='text', placeholder='Transaction Id')
+                    |  
+                    .form-group
+                        label(for='currency') Currency
+                        |  
+                        input#currency.form-control(name='currency', type='text', placeholder='Currency' value='USD')
+                    |  
+                    .form-group
+                        label(for='amount') Amount
+                        |  
+                        input#amount.form-control(name='amount', type='text', placeholder='Amount' value='29999')
+                    |  
+                    .form-group
+                        label(for='status') Transaction Status
+                        |  
+                        input#status.form-control(name='status', type='text', placeholder='Status', value='Success')
+                    |  
+                    .form-group
+                        label(for='approvalCode') Approval Code
+                        |  
+                        input#approvalCode.form-control(name='approvalCode', type='text', placeholder='Approval Code')
+                    |  
+                    input(name='expressCheckoutIndicator', type='hidden', value='false')
+                    input(name='date', type='hidden', value=params.nowDate)
+                    button.btn.btn-primary(type='submit')
+                        i.fa.fa-shopping-cart.fa-lg
+                        |  Transaction Postback

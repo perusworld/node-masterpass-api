@@ -29,7 +29,9 @@ function Masterpass(opts) {
                 keySign: '/masterpass/v6/sessionkeysigning',
                 shoppingCart: '/masterpass/v6/shopping-cart',
                 merchantInit: '/masterpass/v6/merchant-initialization',
-                accessToken: '/oauth/consumer/v1/access_token'
+                accessToken: '/oauth/consumer/v1/access_token',
+                checkout: '/masterpass/v6/checkout/%s',
+                transaction: '/masterpass/v6/transaction'
             }
         });
     if (this.conf.env === 'production') {
@@ -42,6 +44,8 @@ function Masterpass(opts) {
     this.conf.shoppingCartUrl = this.conf.urlPrefix + this.conf.urls.shoppingCart;
     this.conf.merchantInitUrl = this.conf.urlPrefix + this.conf.urls.merchantInit;
     this.conf.accessTokenUrl = this.conf.urlPrefix + this.conf.urls.accessToken;
+    this.conf.checkoutUrl = this.conf.urlPrefix + this.conf.urls.checkout;
+    this.conf.transactionUrl = this.conf.urlPrefix + this.conf.urls.transaction;
 
 }
 
@@ -106,7 +110,7 @@ Masterpass.prototype.signHeader = function (ctx, callback) {
     callback(null, ctx);
 };
 
-Masterpass.prototype.buildRequestHeader = function (ctx, callback) {
+Masterpass.prototype.buildRequestHeader = function (ctx, callback, method) {
     var params = {
         oauth_consumer_key: this.conf.consumerKey,
         oauth_nonce: this.getNonce(),
@@ -138,15 +142,15 @@ Masterpass.prototype.buildRequestHeader = function (ctx, callback) {
         params.oauth_body_hash = hashed;
     }
     ctx.params = params;
-    ctx.header = ["POST", encodeURIComponent(ctx.url), encodeURIComponent(encodedParams.join('&'))].join("&");
+    ctx.header = [method ? method : "POST", encodeURIComponent(ctx.url), encodeURIComponent(encodedParams.join('&'))].join("&");
     callback(null, ctx);
 };
 
-Masterpass.prototype.send = function (ctx, callback) {
+Masterpass.prototype.send = function (ctx, callback, method) {
     var ptr = this;
     var req = {
         uri: ctx.url,
-        method: 'POST',
+        method: method ? method : 'POST',
         headers: {
             'Authorization': ctx.headerString,
             'Content-Type': 'application/xml;charset=UTF-8'
@@ -172,11 +176,11 @@ Masterpass.prototype.send = function (ctx, callback) {
     });
 };
 
-Masterpass.prototype.buildAndSendRequest = function (ctx, callback) {
+Masterpass.prototype.buildAndSendRequest = function (ctx, callback, method) {
     var ptr = this;
     async.waterfall([
         function (callback) {
-            ptr.buildRequestHeader(ctx, callback);
+            ptr.buildRequestHeader(ctx, callback, method);
         },
         function (ctx, callback) {
             ptr.signHeader(ctx, callback);
@@ -185,7 +189,7 @@ Masterpass.prototype.buildAndSendRequest = function (ctx, callback) {
             ptr.buildHeaderString(ctx, callback);
         },
         function (ctx, callback) {
-            ptr.send(ctx, callback);
+            ptr.send(ctx, callback, method);
         }
     ], callback);
 };
@@ -311,6 +315,49 @@ Masterpass.prototype.accessToken = function (req, callback) {
             realm: this.conf.realm
         }
     }, callback);
+};
+
+Masterpass.prototype.checkout = function (req, callback) {
+    this.buildAndSendRequest({
+        url: util.format(this.conf.checkoutUrl, req.checkoutId),
+        customParams: {
+            oauth_token: req.token,
+        },
+        sendOpts: {
+            xmlToJson: true
+        }
+    }, callback, 'GET');
+};
+
+Masterpass.prototype.transactionPostback = function (req, callback) {
+    var ptr = this;
+    var mtrans = {
+        MerchantTransactions:
+        [{
+            TransactionId: [req.transactionId],
+            ConsumerKey: [ptr.conf.consumerKey],
+            Currency: [req.currency],
+            OrderAmount: [req.amount],
+            PurchaseDate: [req.date],
+            TransactionStatus: [req.status],
+            ApprovalCode: [req.approvalCode],
+            ExpressCheckoutIndicator: [req.expressCheckoutIndicator]
+        }]
+    };
+    async.waterfall([
+        function (callback) {
+            ptr.toXML('MerchantTransactions', mtrans, callback);
+        },
+        function (xmlStr, callback) {
+            ptr.buildAndSendRequest({
+                url: ptr.conf.transactionUrl,
+                body: xmlStr,
+                sendOpts: {
+                    xmlToJson: true
+                }
+            }, callback);
+        }
+    ], callback);
 };
 
 

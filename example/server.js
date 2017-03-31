@@ -4,6 +4,7 @@ const
     bodyParser = require('body-parser'),
     async = require('async'),
     express = require('express');
+var moment = require('moment');
 
 var masterpassapi = require('../node-masterpass-api').masterpass();
 
@@ -29,7 +30,9 @@ app.get('/', function (req, res) {
     res.render('index', {
         title: 'Hello',
         masterpass: masterpass,
-        params: {}
+        params: {
+            nowDate: moment().toISOString()
+        },
     });
 });
 
@@ -87,8 +90,31 @@ app.post('/accessToken', function (req, res) {
     });
 });
 
+app.post('/checkout', function (req, res) {
+    masterpass.checkout({
+        token: req.body.accessToken,
+        checkoutId: req.body.checkoutId,
+    }, (err, resp) => {
+        if (err) {
+            res.json(err);
+        } else {
+            res.json(resp);
+        }
+    });
+});
+
+app.post('/transactionPostback', function (req, res) {
+    masterpass.transactionPostback(req.body, (err, resp) => {
+        if (err) {
+            res.json(err);
+        } else {
+            res.json(resp);
+        }
+    });
+});
+
 app.get('/requestTokenCallback', function (req, res) {
-    console.log(req.query);
+    console.log('requestTokenCallback', req.query);
     res.render('index', {
         title: 'Continue Checkout',
         masterpass: masterpass,
