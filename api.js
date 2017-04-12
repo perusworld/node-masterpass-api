@@ -46,6 +46,9 @@ function Masterpass(opts) {
     this.conf.accessTokenUrl = this.conf.urlPrefix + this.conf.urls.accessToken;
     this.conf.checkoutUrl = this.conf.urlPrefix + this.conf.urls.checkout;
     this.conf.transactionUrl = this.conf.urlPrefix + this.conf.urls.transaction;
+    if (this.conf.httpProxy && "" !== this.conf.httpProxy) {
+        console.log('using proxy', this.conf.httpProxy)
+    }
 
 }
 
@@ -156,6 +159,9 @@ Masterpass.prototype.send = function (ctx, callback, method) {
             'Content-Type': 'application/xml;charset=UTF-8'
         }
     };
+    if (this.conf.httpProxy && "" !== this.conf.httpProxy) {
+        req.proxy = this.conf.httpProxy;
+    }
     if (ctx.body) {
         req.body = ctx.body;
     }
