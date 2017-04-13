@@ -162,6 +162,9 @@ Masterpass.prototype.send = function (ctx, callback, method) {
     if (this.conf.httpProxy && "" !== this.conf.httpProxy) {
         req.proxy = this.conf.httpProxy;
     }
+    if (this.conf.rejectUnauthorized) {
+        req.rejectUnauthorized  = this.conf.rejectUnauthorized ;
+    }
     if (ctx.body) {
         req.body = ctx.body;
     }
