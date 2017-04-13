@@ -24,6 +24,7 @@
   "dependencies": {
     "async": "^2.1.5",
     "merge": "^1.2.0",
+    "node-forge": "^0.7.1",
     "request": "^2.81.0",
     "xml2js": "^0.4.17"
   },
