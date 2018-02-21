@@ -17,6 +17,16 @@ var masterpass = new masterpassapi.Masterpass({
     env: process.env.MP_ENV
 });
 
+var masterpassv7 = new masterpassapi.Masterpass({
+    privateKey: process.env.MP_PRIVATE_KEY,
+    consumerKey: process.env.MP_CONSUMER_KEY,
+    callBackUrl: process.env.MP_CALLBACK_URL,
+    merchantCheckoutId: process.env.MP_CHECKOUT_ID,
+    originUrl: process.env.MP_ORIGIN_URL,
+    env: process.env.MP_ENV,
+    v7: true
+});
+
 var app = express();
 app.set('port', process.env.PORT || 3000);
 app.set('view engine', 'pug');
@@ -40,7 +50,7 @@ app.get('/v6', function (req, res) {
 app.get('/', function (req, res) {
     res.render('index-v7', {
         title: 'Hello V7',
-        masterpass: masterpass,
+        masterpass: masterpassv7,
         params: {
             nowDate: moment().toISOString()
         },
@@ -152,7 +162,7 @@ app.get('/requestTokenCallbackv7', function (req, res) {
     console.log('requestTokenCallback', req.query);
     res.render('index-v7', {
         title: 'Continue Checkout',
-        masterpass: masterpass,
+        masterpass: masterpassv7,
         params: req.query,
         v7: true
     });

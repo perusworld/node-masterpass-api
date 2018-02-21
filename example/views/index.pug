@@ -2,9 +2,9 @@ extends layout
 
 block scripts
     if masterpass.conf.env == 'stage'
-        script(src='//sandbox.static.masterpass.com/dyn/js/switch/integration/MasterPass.client.js')
+        script(src='//sandbox.masterpass.com/integration/merchant.js')
     else
-        script(src='//static.masterpass.com/dyn/js/switch/integration/MasterPass.client.js')
+        script(src='//masterpass.com/integration/merchant.js')
     script(src='/scripts/index.js')
     script.
         checkoutConfig.callBackUrl = "#{masterpass.conf.callBackUrl}";
