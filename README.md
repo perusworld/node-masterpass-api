@@ -20,7 +20,7 @@ To start the standard checkout in v7 is very simple, create a unique cartId for 
 
 Start the lightbox on the client browser using the following include (depending upon stage or production) and the code
 
-The callback url is something that you need to configure in you mastercard developer account settings, since the cartId needs to be associated to a specific flow you could do it statefull by storing it in your session or stateless by including it as a parameter in the callbackUrl below as the callback url needs to only match with that of the one configured at the top domain level. In this examle case it could be somehting like http://localhost/requestTokenCallbackv7?cartId=some-unique-id
+The callback url is something that you need to configure in you mastercard developer account settings, since the cartId needs to be associated to a specific flow you could do it statefull by storing it in your session or stateless by including it as a parameter in the callbackUrl below as the callback url needs to only match with that of the one configured at the top domain level. In this example case it could be somehting like http://localhost/requestTokenCallbackv7?cartId=some-unique-id
 
 ```html
 <!-- Sandbox -->
@@ -220,9 +220,12 @@ async.waterfall([
 There is a sample app in the example folder that shows the available operations, set the following env variables before running the app.
 
 ```powershell
-    $env:MP_PRIVATE_KEY = [IO.File]::ReadAllText("---your private key---")
-    $env:MP_CONSUMER_KEY = "---your consumer key---"
-    $env:MP_CALLBACK_URL = "http://localhost:3000/requestTokenCallback"
+    $env:MP_PRIVATE_KEY = [IO.File]::ReadAllText("---your-private-key---")
+    $env:MP_CONSUMER_KEY = "---your-consumer-key---"
+    $env:MP_CALLBACK_URL = "http://localhost:3000/requestTokenCallbackv7"
+    $env:MP_ORIGIN_URL = "http://localhost:3000"
+    $env:MP_CHECKOUT_ID = "--your-merchant-checkout-id--"
+    $env:MP_ENV = "stage"
 ```
 
 Run the app
