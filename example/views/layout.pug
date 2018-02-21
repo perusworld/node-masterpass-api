@@ -27,8 +27,10 @@ html(lang='en')
             a.navbar-brand(href='/') Masterpass Sample Server
           #navbar.navbar-collapse.collapse
             ul.nav.navbar-nav
-              li.active
-                a(href='/') Home
+              li(class=v7?'active':'')
+                a(href='/') v7
+              li(class=v6?'active':'')
+                a(href='/v6') v6
       block content
     block footer
     block footerscripts

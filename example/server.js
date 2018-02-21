@@ -26,13 +26,25 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(express.static('public'));
 
-app.get('/', function (req, res) {
+app.get('/v6', function (req, res) {
     res.render('index', {
         title: 'Hello',
         masterpass: masterpass,
         params: {
             nowDate: moment().toISOString()
         },
+        v6: true
+    });
+});
+
+app.get('/', function (req, res) {
+    res.render('index-v7', {
+        title: 'Hello V7',
+        masterpass: masterpass,
+        params: {
+            nowDate: moment().toISOString()
+        },
+        v7: true
     });
 });
 
@@ -103,6 +115,19 @@ app.post('/checkout', function (req, res) {
     });
 });
 
+app.post('/payment', function (req, res) {
+    masterpass.paymentData({
+        oauthVerifier: req.body.oauthVerifier,
+        cartId: req.body.cartId
+    }, (err, resp) => {
+        if (err) {
+            res.json(err);
+        } else {
+            res.json(resp);
+        }
+    });
+});
+
 app.post('/transactionPostback', function (req, res) {
     masterpass.transactionPostback(req.body, (err, resp) => {
         if (err) {
@@ -118,7 +143,18 @@ app.get('/requestTokenCallback', function (req, res) {
     res.render('index', {
         title: 'Continue Checkout',
         masterpass: masterpass,
-        params: req.query
+        params: req.query,
+        v6: true
+    });
+});
+
+app.get('/requestTokenCallbackv7', function (req, res) {
+    console.log('requestTokenCallback', req.query);
+    res.render('index-v7', {
+        title: 'Continue Checkout',
+        masterpass: masterpass,
+        params: req.query,
+        v7: true
     });
 });
 

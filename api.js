@@ -31,6 +31,7 @@ function Masterpass(opts) {
                 merchantInit: '/masterpass/v6/merchant-initialization',
                 accessToken: '/oauth/consumer/v1/access_token',
                 checkout: '/masterpass/v6/checkout/%s',
+                paymentData: '/masterpass/paymentdata/%s?cartId=%s&checkoutId=%s',
                 transaction: '/masterpass/v6/transaction'
             }
         });
@@ -45,6 +46,7 @@ function Masterpass(opts) {
     this.conf.merchantInitUrl = this.conf.urlPrefix + this.conf.urls.merchantInit;
     this.conf.accessTokenUrl = this.conf.urlPrefix + this.conf.urls.accessToken;
     this.conf.checkoutUrl = this.conf.urlPrefix + this.conf.urls.checkout;
+    this.conf.paymentDataUrl = this.conf.urlPrefix + this.conf.urls.paymentData;
     this.conf.transactionUrl = this.conf.urlPrefix + this.conf.urls.transaction;
     if (this.conf.httpProxy && "" !== this.conf.httpProxy) {
         console.log('using proxy', this.conf.httpProxy)
@@ -116,8 +118,8 @@ Masterpass.prototype.signHeader = function (ctx, callback) {
 Masterpass.prototype.buildRequestHeader = function (ctx, callback, method) {
     var params = {
         oauth_consumer_key: this.conf.consumerKey,
-        oauth_nonce: this.getNonce(),
-        oauth_timestamp: this.getTimestamp(),
+        oauth_nonce: ctx.nonce ? ctx.nonce : this.getNonce(),
+        oauth_timestamp: ctx.timestamp ? ctx.timestamp : this.getTimestamp(),
         oauth_signature_method: this.conf.signature,
         oauth_version: this.conf.version
     };
@@ -145,7 +147,8 @@ Masterpass.prototype.buildRequestHeader = function (ctx, callback, method) {
         params.oauth_body_hash = hashed;
     }
     ctx.params = params;
-    ctx.header = [method ? method : "POST", encodeURIComponent(ctx.url), encodeURIComponent(encodedParams.join('&'))].join("&");
+    ctx.header = [method ? method : "POST", encodeURIComponent(ctx.url).replace("%3F","&")].join("&");
+    ctx.header = ctx.header + '%26' + encodeURIComponent(encodedParams.join('&'));
     callback(null, ctx);
 };
 
@@ -156,7 +159,7 @@ Masterpass.prototype.send = function (ctx, callback, method) {
         method: method ? method : 'POST',
         headers: {
             'Authorization': ctx.headerString,
-            'Content-Type': 'application/xml;charset=UTF-8'
+            'Content-Type': 'application/json;charset=UTF-8'
         }
     };
     if (this.conf.httpProxy && "" !== this.conf.httpProxy) {
@@ -336,6 +339,15 @@ Masterpass.prototype.checkout = function (req, callback) {
         sendOpts: {
             xmlToJson: true
         }
+    }, callback, 'GET');
+};
+
+Masterpass.prototype.paymentData = function (req, callback) {
+    this.buildAndSendRequest({
+        url: util.format(this.conf.paymentDataUrl, req.oauthVerifier, req.cartId, this.conf.merchantCheckoutId),
+        customParams: {
+            realm: this.conf.realm
+        },
     }, callback, 'GET');
 };
 

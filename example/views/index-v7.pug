@@ -1,0 +1,29 @@
+extends layout
+
+block scripts
+    if masterpass.conf.env == 'stage'
+        script(src='//sandbox.masterpass.com/integration/merchant.js')
+    else
+        script(src='//masterpass.com/integration/merchant.js')
+    script(src='/scripts/index-v7.js')
+    script.
+        checkoutConfig.callBackUrl = "#{masterpass.conf.callBackUrl}";
+        checkoutConfig.merchantCheckoutId = "#{masterpass.conf.merchantCheckoutId}";
+        checkoutConfig.nowDate = "#{params.nowDate}";
+
+block content
+    .container-fluid
+      ul.nav.nav-tabs(role='tablist')
+        li.active(role='presentation')
+          a(href='#stdchk', aria-controls='stdchk', role='tab', data-toggle='tab') Standard Checkout V7
+        li(role='presentation')
+          a(href='#expchk', aria-controls='expchk', role='tab', data-toggle='tab') Express Checkout V7
+        li(role='presentation')
+          a(href='#contchk', aria-controls='contchk', role='tab', data-toggle='tab') Container App to Mobile Checkout V7
+      .tab-content
+        #stdchk.tab-pane.active(role='tabpanel')
+            include _v7-standard-checkout.pug
+        #expchk.tab-pane(role='tabpanel')
+            include _express-checkout.pug
+        #contchk.tab-pane(role='tabpanel')
+            include _container-app-checkout.pug

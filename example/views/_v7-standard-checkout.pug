@@ -1,0 +1,118 @@
+.panel.panel-success
+    .panel-body
+        p Follow the steps (Most of this, you will be keeping it at the server side. This is just a demo of the call history)
+    table.table
+        tr.warning
+            td
+                label Step 1:
+        tr
+            td
+                form.form-inline
+                    button#btnInitCart.btn.btn-primary
+                        i.fa.fa-key.fa-lg
+                        |  Initialize Cart
+        tr.warning
+            td
+                label Step 2:
+        tr
+            td
+                form
+                    .form-group
+                        label(for='amount') Amount
+                        |  
+                        input#amount.form-control(name='amount', type='number', placeholder='Amount', value="100")
+                    |  
+                    .form-group
+                        label(for='cartId') Cart Id
+                        |  
+                        input#cartId.form-control(type='text', placeholder='Cart Id', size="45")
+                    |  
+                    button#btnStartCheckout.btn.btn-primary
+                        i.fa.fa-shopping-cart.fa-lg
+                        |  Start Checkout (Light Box)
+        tr.warning
+            td
+                label Step 3:
+        tr
+            td
+                form#getPayment
+                    .form-group
+                        label(for='mpstatus') Lightbox Status
+                        |  
+                        input#mpstatus.form-control(name='mpstatus', type='text', placeholder='Lightbox Status', value= params.mpstatus)
+                    |  
+                    .form-group
+                        label(for='chkResUrl') Checkout Resource Url
+                        |  
+                        input#checkoutResourceUrl.form-control(name='checkoutResourceUrl', type='text', placeholder='Checkout Resource Url', value= params.checkout_resource_url)
+                    |  
+                    .form-group
+                        label(for='itemDesc') oAuth Verifier
+                        |  
+                        input#oauthVerifier.form-control(name='oauthVerifier', type='text', placeholder='oAuth Verifier', value= params.oauth_verifier)
+                    |  
+                    .form-group
+                        label(for='checkoutId') Checkout Id
+                        |  
+                        input#checkoutId.form-control(name='checkoutId', type='text', placeholder='Checkout Id', value= params.checkoutId)
+                    |  
+                    .form-group
+                        label(for='cartIdPay') Cart Id
+                        |  
+                        input#cartIdPay.form-control(name='cartId', type='text', placeholder='Cart Id', value= params.cartId)
+                    |  
+                    button.btn.btn-primary(type='submit')
+                        i.fa.fa-shopping-cart.fa-lg
+                        |  Get Payment Info
+        tr.warning
+            td
+                label Step 4:
+        tr
+            td
+                form
+                    .form-group
+                        label(for='cartData') Cart Response
+                        |  
+                        textarea#cartData.form-control(placeholder='Cart Response', rows=10)
+        tr.warning
+            td
+                label Step 6:
+        tr
+            td
+                label Process payment through a payment gateway, use the approval code in the next step
+        tr.warning
+            td
+                label Step 7:
+        tr
+            td
+                form#transactionPostback
+                    .form-group
+                        label(for='transactionId') Transaction Id
+                        |  
+                        input#transactionId.form-control(name='transactionId', type='text', placeholder='Transaction Id')
+                    |  
+                    .form-group
+                        label(for='currency') Currency
+                        |  
+                        input#currency.form-control(name='currency', type='text', placeholder='Currency' value='USD')
+                    |  
+                    .form-group
+                        label(for='amountPay') Amount
+                        |  
+                        input#amountPay.form-control(name='amount', type='text', placeholder='Amount' value='29999')
+                    |  
+                    .form-group
+                        label(for='status') Transaction Status
+                        |  
+                        input#status.form-control(name='status', type='text', placeholder='Status', value='Success')
+                    |  
+                    .form-group
+                        label(for='approvalCode') Approval Code
+                        |  
+                        input#approvalCode.form-control(name='approvalCode', type='text', placeholder='Approval Code')
+                    |  
+                    input(name='expressCheckoutIndicator', type='hidden', value='false')
+                    input(name='date', type='hidden', value=params.nowDate)
+                    button.btn.btn-primary(type='submit')
+                        i.fa.fa-shopping-cart.fa-lg
+                        |  Transaction Postback

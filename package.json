@@ -1,6 +1,6 @@
 {
   "name": "node-masterpass-api",
-  "version": "2.0.4",
+  "version": "3.0.0",
   "description": "Simple Node.js library to interact with the masterpass apis",
   "main": "node-masterpass-api.js",
   "scripts": {

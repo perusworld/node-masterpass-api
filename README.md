@@ -10,8 +10,11 @@ Based on [Test Merchant Server](https://github.com/Mastercard/masterpass-android
 ```bash
 npm install github:perusworld/node-masterpass-api --save
 ```
-## Usage ##
+## Usage (v7) ##
 
+The v7 version is much simpler with just one call to get the lightbox and another to get payment data post lightbox.
+
+## Usage (v6) might be deprecated  ##
 
 ### [Standard Checkout Initiation Steps](https://developer.mastercard.com/documentation/masterpass-merchant-integration#standard-checkout) ##
 ```javascript
@@ -147,7 +150,7 @@ async.waterfall([
 ```
 
 ## Example App ##
-### node-masterpass-api - Masterpass Standard Checkout Lightbox Demo Video ###
+### node-masterpass-api - Masterpass Standard Checkout Lightbox Demo Video (v6) ###
 [![node-masterpass-api - Masterpass Standard Checkout Lightbox Demo Video](https://img.youtube.com/vi/Ayyq_hYlTEg/3.jpg)](https://youtu.be/Ayyq_hYlTEg)
 
 ### Example App ###
