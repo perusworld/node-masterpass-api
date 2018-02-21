@@ -20,7 +20,8 @@ function Masterpass(opts) {
         realm: 'eWallet',
         env: 'stage',
         urlPrefix: 'https://sandbox.api.mastercard.com',
-        keySize: 2048
+        keySize: 2048,
+        v7: false
     }, opts, {
             urls: {
                 production: 'https://api.mastercard.com',
@@ -147,8 +148,12 @@ Masterpass.prototype.buildRequestHeader = function (ctx, callback, method) {
         params.oauth_body_hash = hashed;
     }
     ctx.params = params;
-    ctx.header = [method ? method : "POST", encodeURIComponent(ctx.url).replace("%3F","&")].join("&");
-    ctx.header = ctx.header + '%26' + encodeURIComponent(encodedParams.join('&'));
+    if (this.conf.v7) {
+        ctx.header = [method ? method : "POST", encodeURIComponent(ctx.url).replace("%3F","&")].join("&");
+        ctx.header = ctx.header + '%26' + encodeURIComponent(encodedParams.join('&'));
+    } else {
+        ctx.header = [method ? method : "POST", encodeURIComponent(ctx.url), encodeURIComponent(encodedParams.join('&'))].join("&");
+    }
     callback(null, ctx);
 };
 
@@ -159,14 +164,13 @@ Masterpass.prototype.send = function (ctx, callback, method) {
         method: method ? method : 'POST',
         headers: {
             'Authorization': ctx.headerString,
-            'Content-Type': 'application/json;charset=UTF-8'
+            'Content-Type': this.conf.v7 ? 'application/json;charset=UTF-8' : 'application/xml;charset=UTF-8'
         }
     };
     if (this.conf.httpProxy && "" !== this.conf.httpProxy) {
         req.proxy = this.conf.httpProxy;
     }
     if (this.conf.hasOwnProperty('rejectUnauthorized')) {
-        console.log('rejectUnauthorized');
         req.rejectUnauthorized  = this.conf.rejectUnauthorized ;
     }
     if (ctx.body) {
